@@ -22,7 +22,7 @@ public class UrlController {
     }
 
     // 1 - reading all urls
-    @GetMapping("/all")
+    @GetMapping("/api/urls")
     public ResponseEntity<?> getAll() {
         List<Url> listOfUrls = urlService.getAll();
         return listOfUrls != null && !listOfUrls.isEmpty()
@@ -31,26 +31,26 @@ public class UrlController {
     }
 
     // 2 - reading of the one url, and redirect.
-    @GetMapping("/all/{shortUrl}")
+    @GetMapping("/api/urls/{shortUrl}")
     public ResponseEntity<?> getUrlAndRedirect(@PathVariable String shortUrl,
                                          HttpServletResponse response) throws IOException {
         Url url = urlService.getByShortUrl(shortUrl);
         if (url != null) {
             response.sendRedirect("https://" + url.getUrl());
-            return ResponseEntity.ok().body(HttpStatus.MOVED_PERMANENTLY);
+            return ResponseEntity.ok(url);
         }
         return ResponseEntity.ok().body(HttpStatus.NOT_FOUND);
     }
 
     // 3 - creating
-    @PostMapping("/adding")
+    @PostMapping("/api/adding")
     public ResponseEntity<?> addUrl(@RequestBody Url url) {
         urlService.addUrl(url);
         return ResponseEntity.ok().body(HttpStatus.CREATED);
     }
 
     // 4 - deleting by shortUrl
-    @DeleteMapping("/deleting/{shortUrl}")
+    @DeleteMapping("/api/deleting/{shortUrl}")
     public ResponseEntity<?> deleteUrl(@PathVariable String shortUrl) {
         Url url = urlService.getByShortUrl(shortUrl);
         if (url != null) {
@@ -61,7 +61,7 @@ public class UrlController {
     }
 
     // 5 -  updating
-    @PutMapping("/editing")
+    @PutMapping("/api/editing")
     public ResponseEntity<?> editUrl(@RequestBody Url url) {
         Url url2 = urlService.getByShortUrl(url.getShortUrl());
         if (url2 != null) {

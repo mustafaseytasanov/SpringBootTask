@@ -77,6 +77,21 @@
 			<version>2.4.0-b180830.0359</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.instancio/instancio-junit -->
+		<dependency>
+			<groupId>org.instancio</groupId>
+			<artifactId>instancio-junit</artifactId>
+			<version>3.6.0</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/net.javacrumbs.json-unit/json-unit-assertj -->
+		<dependency>
+			<groupId>net.javacrumbs.json-unit</groupId>
+			<artifactId>json-unit-assertj</artifactId>
+			<version>3.2.2</version>
+			<scope>test</scope>
+		</dependency>
 
 	</dependencies>
 

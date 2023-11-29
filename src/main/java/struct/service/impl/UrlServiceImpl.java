@@ -18,8 +18,8 @@ public class UrlServiceImpl implements UrlService {
     }
 
     @Override
-    public Url addUrl(Url url) {
-        return urlRepository.saveAndFlush(url);
+    public void addUrl(Url url) {
+        urlRepository.saveAndFlush(url);
     }
 
     @Override
@@ -33,8 +33,8 @@ public class UrlServiceImpl implements UrlService {
     }
 
     @Override
-    public Url editUrl(Url url) {
-        return urlRepository.saveAndFlush(url);
+    public void editUrl(Url url) {
+        urlRepository.saveAndFlush(url);
     }
 
     @Override

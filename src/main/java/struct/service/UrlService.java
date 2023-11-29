@@ -6,10 +6,10 @@ import java.util.List;
 
 public interface UrlService {
 
-    Url addUrl(Url url);
+    void addUrl(Url url);
     void delete(Url url);
     Url getByShortUrl(String shortUrl);
-    Url editUrl(Url url);
+    void editUrl(Url url);
     List<Url> getAll();
 
 }
