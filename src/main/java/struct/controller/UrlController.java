@@ -1,6 +1,7 @@
 package struct.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import net.datafaker.Faker;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import struct.model.Url;
@@ -22,6 +23,8 @@ public class UrlController {
     public UrlController(UrlService urlService) {
         this.urlService = urlService;
     }
+
+    Faker faker = new Faker();
 
     // 1 - reading all urls
     @GetMapping("/api/urls")
@@ -49,6 +52,10 @@ public class UrlController {
     public ResponseEntity<?> addUrl(@RequestBody Url url) throws MalformedURLException {
         boolean isValidUrl = Validator.isValidURL(url.getUrl());
         if (isValidUrl) {
+            if (url.getShortUrl() == null) {
+                String randomShortUrl = faker.regexify("[a-z0-9]{10}");
+                url.setShortUrl(randomShortUrl);
+            }
             urlService.addUrl(url);
             return ResponseEntity.ok().body(HttpStatus.CREATED);
         }
@@ -67,9 +74,12 @@ public class UrlController {
         return ResponseEntity.ok().body(HttpStatus.NOT_FOUND);
     }
 
-    // 5 -  updating
+    // 5 - updating
     @PutMapping("/api/editing")
     public ResponseEntity<?> editUrl(@RequestBody Url url) throws MalformedURLException {
+        if (url.getUrl() == null) {
+            return ResponseEntity.ok().body("URL name is empty");
+        }
         boolean isValidUrl = Validator.isValidURL(url.getUrl());
         if (!isValidUrl) {
             return ResponseEntity.ok().body("Url is not valid");

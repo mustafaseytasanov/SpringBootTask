@@ -2,7 +2,9 @@ package struct.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
+import net.datafaker.Faker;
 import org.instancio.Instancio;
+import org.instancio.Select;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,9 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import struct.model.Url;
 import struct.repository.UrlRepository;
-import struct.validation.Validator;
 
-import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,6 +37,7 @@ public class UrlControllerTest {
 	@Autowired
 	private ObjectMapper om;
 
+	Faker faker = new Faker();
 
 	@Test
 	public void testGetAll() throws Exception {
@@ -57,12 +58,12 @@ public class UrlControllerTest {
 	@Transactional
 	public void testGetUrlAndRedirect() throws Exception {
 		// Init
-		String shortUrl = "uber";
-		String fullUrl = "www.uber.com";
-		Url url = new Url(shortUrl, fullUrl);
+		String randomShortUrl = faker.regexify("[a-z0-9]{10}");
+		String randomUrlName = faker.internet().url();
+		Url url = new Url(randomShortUrl, randomUrlName);
 		urlRepository.save(url);
 		// Request
-		var request = get("/api/urls/" + shortUrl);
+		var request = get("/api/urls/" + randomShortUrl);
 		var result = mockMvc.perform(request)
 				.andExpect(status().is(302))
 				.andReturn();
@@ -79,12 +80,12 @@ public class UrlControllerTest {
 	@Transactional
 	public void testAddUrl() throws Exception {
 		// Init
-		String shortUrl = "uber";
-		String fullUrl = "www.uber.com";
+		String randomShortUrl = faker.regexify("[a-z0-9]{10}");
+		String randomUrlName = faker.internet().url();
 		// Actions
 		var data = new HashMap<>();
-		data.put("shortUrl", shortUrl);
-		data.put("url", fullUrl);
+		data.put("shortUrl", randomShortUrl);
+		data.put("url", randomUrlName);
 		var request = post("/api/adding")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(om.writeValueAsString(data));
@@ -93,9 +94,9 @@ public class UrlControllerTest {
 				.andExpect(status().isOk());
 
 		// Checking of Url parameters
-		var url = urlRepository.findByName(shortUrl);
-		assertThat(url.getUrl()).isEqualTo(fullUrl);
-		assertThat(url.getShortUrl()).isEqualTo(shortUrl);
+		var url = urlRepository.findByName(randomShortUrl);
+		assertThat(url.getUrl()).isEqualTo(randomUrlName);
+		assertThat(url.getShortUrl()).isEqualTo(randomShortUrl);
 
 		// Deleting of created url from DB
 		urlRepository.delete(url);
@@ -107,6 +108,7 @@ public class UrlControllerTest {
 
 		var url = Instancio.of(Url.class)
 				.ignore(field(Url::getId))
+				.supply(Select.field(Url::getUrl), () -> faker.internet().url())
 				.create();
 		String shortUrl = url.getShortUrl();
 		urlRepository.save(url);
@@ -114,7 +116,8 @@ public class UrlControllerTest {
 		// Actions
 		var data = new HashMap<>();
 		data.put("shortUrl", shortUrl);
-		data.put("url", "www.arsenal.com");
+		String randomUrlName = faker.internet().url();
+		data.put("url", randomUrlName);
 
 		var request = put("/api/editing")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -125,7 +128,7 @@ public class UrlControllerTest {
 
 		// Checking after Url updating
 		url = urlRepository.findByName(url.getShortUrl());
-		assertThat(url.getUrl()).isEqualTo("www.arsenal.com");
+		assertThat(url.getUrl()).isEqualTo(randomUrlName);
 
 		// Deleting from DB
 		urlRepository.delete(url);
@@ -138,15 +141,14 @@ public class UrlControllerTest {
 		// Init
 		var url = Instancio.of(Url.class)
 				.ignore(field(Url::getId))
+				.supply(Select.field(Url::getUrl), () -> faker.internet().url())
 				.create();
 		String shortUrl = url.getShortUrl();
-		String fullUrl = url.getUrl();
 		urlRepository.save(url);
 
 		// Actions
 		var data = new HashMap<>();
 		data.put("shortUrl", shortUrl);
-		data.put("url", fullUrl);
 
 		var request = delete("/api/deleting/" + shortUrl)
 				.contentType(MediaType.APPLICATION_JSON)
