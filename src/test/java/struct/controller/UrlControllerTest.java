@@ -11,7 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import struct.model.Url;
 import struct.repository.UrlRepository;
+import struct.validation.Validator;
 
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,6 +36,7 @@ public class UrlControllerTest {
 
 	@Autowired
 	private ObjectMapper om;
+
 
 	@Test
 	public void testGetAll() throws Exception {

@@ -7,8 +7,10 @@ import struct.model.Url;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import struct.service.UrlService;
+import struct.validation.Validator;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 
 @RestController
@@ -44,9 +46,14 @@ public class UrlController {
 
     // 3 - creating
     @PostMapping("/api/adding")
-    public ResponseEntity<?> addUrl(@RequestBody Url url) {
-        urlService.addUrl(url);
-        return ResponseEntity.ok().body(HttpStatus.CREATED);
+    public ResponseEntity<?> addUrl(@RequestBody Url url) throws MalformedURLException {
+        boolean isValidUrl = Validator.isValidURL(url.getUrl());
+        if (isValidUrl) {
+            urlService.addUrl(url);
+            return ResponseEntity.ok().body(HttpStatus.CREATED);
+        }
+        return ResponseEntity.ok().body("Url is not valid");
+
     }
 
     // 4 - deleting by shortUrl
@@ -62,7 +69,11 @@ public class UrlController {
 
     // 5 -  updating
     @PutMapping("/api/editing")
-    public ResponseEntity<?> editUrl(@RequestBody Url url) {
+    public ResponseEntity<?> editUrl(@RequestBody Url url) throws MalformedURLException {
+        boolean isValidUrl = Validator.isValidURL(url.getUrl());
+        if (!isValidUrl) {
+            return ResponseEntity.ok().body("Url is not valid");
+        }
         Url url2 = urlService.getByShortUrl(url.getShortUrl());
         if (url2 != null) {
             url2.setUrl(url.getUrl());
