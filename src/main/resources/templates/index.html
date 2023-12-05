@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="eng">
+<head>
+    <title>List of links</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        table, th, td {
+            width: 50%;
+            border: 2px solid blue;
+            margin: auto;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<h1 style="text-align: center">List of links</h1>
+<table>
+    <tr>
+        <th>Short link</th>
+        <th>Link</th>
+    </tr>
+    <tr th:each="url : ${listOfUrls}">
+        <td><a target="_blank" th:href="${url.url}"><p th:text="${url.shortUrl}"></p></a></td>
+        <td><a target="_blank" th:href="${url.url}"><p th:text="${url.url}"></p></a></td>
+    </tr>
+</table>
+
+</body>
+</html>

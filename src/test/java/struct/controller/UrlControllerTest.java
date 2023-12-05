@@ -40,8 +40,7 @@ public class UrlControllerTest {
 	Faker faker = new Faker();
 
 	@Test
-	public void testGetAll() throws Exception {
-
+	public void testGetAllRest() throws Exception {
 		List<Url> list = urlRepository.findAll();
 		var result = mockMvc.perform(get("/api/urls"))
 				.andExpect(status().isOk())
@@ -56,8 +55,7 @@ public class UrlControllerTest {
 
 	@Test
 	@Transactional
-	public void testGetUrlAndRedirect() throws Exception {
-
+	public void testgetUrlAndRedirectRest() throws Exception {
 		// The first test
 		// Init
 		String randomShortUrl = faker.regexify("[a-z0-9]{10}");
@@ -70,21 +68,17 @@ public class UrlControllerTest {
 				.andExpect(status().is(302))
 				.andReturn();
 		var body = result.getResponse().getContentAsString();
-
 		// Checking
 		assertThatJson(body).isEqualTo(url);
-
 		// Deleting from DB
 		urlRepository.delete(url);
 
 		// The second test
-		// Request
 		request = get("/api/urls/" + randomShortUrl);
 		result = mockMvc.perform(request)
 				.andExpect(status().isOk())
 				.andReturn();
 		body = result.getResponse().getContentAsString();
-
 		// Checking
 		assertThatJson(body).isEqualTo("NOT_FOUND");
 	}
@@ -92,7 +86,6 @@ public class UrlControllerTest {
 	@Test
 	@Transactional
 	public void testAddUrl() throws Exception {
-
 		// The first test
 		// Init
 		String randomShortUrl = faker.regexify("[a-z0-9]{10}");
@@ -104,15 +97,12 @@ public class UrlControllerTest {
 		var request = post("/api/adding")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(om.writeValueAsString(data));
-
 		mockMvc.perform(request)
 				.andExpect(status().isOk());
-
 		// Checking of Url parameters
 		var url = urlRepository.findByName(randomShortUrl);
 		assertThat(url.getUrl()).isEqualTo(randomUrlName);
 		assertThat(url.getShortUrl()).isEqualTo(randomShortUrl);
-
 		// Deleting of created url from DB
 		urlRepository.delete(url);
 
@@ -125,12 +115,10 @@ public class UrlControllerTest {
 		request = post("/api/adding")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(om.writeValueAsString(data));
-
 		var result = mockMvc.perform(request)
 				.andExpect(status().isOk())
 				.andReturn();
 		var body = result.getResponse().getContentAsString();
-
 		// Checking
 		assertThatJson(body).isEqualTo("null");
 
@@ -145,12 +133,10 @@ public class UrlControllerTest {
 		request = post("/api/adding")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(om.writeValueAsString(data));
-
 		result = mockMvc.perform(request)
 				.andExpect(status().isOk())
 				.andReturn();
 		body = result.getResponse().getContentAsString();
-
 		// Checking
 		assertThatJson(body).isEqualTo(false);
 	}
@@ -158,7 +144,6 @@ public class UrlControllerTest {
 	@Test
 	@Transactional
 	public void testEditUrl() throws Exception {
-
 		// The first test
 		var url = Instancio.of(Url.class)
 				.ignore(field(Url::getId))
@@ -166,59 +151,47 @@ public class UrlControllerTest {
 				.create();
 		String shortUrl = url.getShortUrl();
 		urlRepository.save(url);
-
 		// Actions
 		var data = new HashMap<>();
 		data.put("shortUrl", shortUrl);
 		String randomUrlName = faker.internet().url();
 		data.put("url", randomUrlName);
-
 		var request = put("/api/editing")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(om.writeValueAsString(data));
-
 		mockMvc.perform(request)
 				.andExpect(status().isOk());
-
 		// Checking after Url updating
 		url = urlRepository.findByName(url.getShortUrl());
 		assertThat(url.getUrl()).isEqualTo(randomUrlName);
 
 		// The second test
-
 		data = new HashMap<>();
 		data.put("shortUrl", shortUrl);
 		request = put("/api/editing")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(om.writeValueAsString(data));
-
 		var result = mockMvc.perform(request)
 				.andExpect(status().isOk())
 				.andReturn();
 		var body = result.getResponse().getContentAsString();
-
 		// Checking
 		assertThatJson(body).isEqualTo("null");
 
 		// The third test
-
 		data = new HashMap<>();
 		data.put("shortUrl", shortUrl);
 		randomUrlName = faker.regexify("[0-9]{10}");
 		data.put("url", randomUrlName);
-
 		request = put("/api/editing")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(om.writeValueAsString(data));
-
 		result = mockMvc.perform(request)
 				.andExpect(status().isOk())
 				.andReturn();
 		body = result.getResponse().getContentAsString();
-
 		// Checking
 		assertThatJson(body).isEqualTo(false);
-
 		// Deleting url
 		urlRepository.delete(url);
 	}
@@ -226,7 +199,6 @@ public class UrlControllerTest {
 	@Test
 	@Transactional
 	public void testDeleteUrl() throws Exception {
-
 		// Init
 		var url = Instancio.of(Url.class)
 				.ignore(field(Url::getId))
@@ -234,15 +206,12 @@ public class UrlControllerTest {
 				.create();
 		String shortUrl = url.getShortUrl();
 		urlRepository.save(url);
-
 		// Actions
 		var data = new HashMap<>();
 		data.put("shortUrl", shortUrl);
-
 		var request = delete("/api/deleting/" + shortUrl)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(om.writeValueAsString(data));
-
 		// Checking status code.
 		mockMvc.perform(request)
 				.andExpect(status().isOk());
