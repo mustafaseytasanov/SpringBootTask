@@ -15,6 +15,7 @@ import struct.validation.Validator;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("")
@@ -51,7 +52,7 @@ public class UrlController {
         return ResponseEntity.ok().body(HttpStatus.NOT_FOUND);
     }
 
-    // Get urls (HTML) - done ???.
+    // Get urls (HTML) - done.
     @GetMapping("/urls")
     public ModelAndView getUrlsHtml() {
         List<Url> listOfUrls = urlService.getAll();
@@ -60,9 +61,10 @@ public class UrlController {
         return mav;
     }
 
-    // 3 - Creating
-    @PostMapping("/api/adding")
-    public ResponseEntity<?> addUrl(@RequestBody Url url) throws MalformedURLException {
+    // 3.1 - Creating (Rest)
+    @PostMapping(value = "/api/adding", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<?> addUrlRest(@RequestBody Url url) throws MalformedURLException {
         if (url.getUrl() == null) {
             return ResponseEntity.ok().body("null");
         }
@@ -81,8 +83,37 @@ public class UrlController {
         return ResponseEntity.ok().body(false);
     }
 
-    // 4 - Deleting by shortUrl
-    @DeleteMapping("/api/deleting/{shortUrl}")
+    // 3.2 - Creating (HTML) - done.
+    @PostMapping("/urls")
+    public ModelAndView addUrlHtml(@RequestParam("url") String fullUrl,
+                                   @RequestParam("shortUrl") String shortUrl)
+            throws MalformedURLException {
+
+        Url url = new Url(shortUrl, fullUrl);
+        if (!fullUrl.contains("://")) {
+            url.setUrl("https://" + fullUrl);
+        }
+        boolean isValidUrl = Validator.isValidURL(url.getUrl());
+        List<Url> listOfUrls = urlService.getAll();
+        ModelAndView mav = new ModelAndView("index");
+        if (!isValidUrl) {
+            mav.addObject("isValid", "Not valid Url");
+        } else {
+            if (Objects.equals(url.getShortUrl(), "")) {
+                String randomShortUrl = faker.regexify("[a-z0-9]{10}");
+                url.setShortUrl(randomShortUrl);
+            }
+            urlService.addUrl(url);
+            mav.addObject("isValid", "");
+            listOfUrls = urlService.getAll(); // list updating
+        }
+        mav.addObject("listOfUrls", listOfUrls);
+        return mav;
+    }
+
+    // 4.1 - Deleting by shortUrl (Rest).
+    @DeleteMapping(value = "/api/deleting/{shortUrl}", produces = "application/json")
+    @ResponseBody
     public ResponseEntity<?> deleteUrl(@PathVariable String shortUrl) {
         Url url = urlService.getByShortUrl(shortUrl);
         if (url != null) {
@@ -92,8 +123,16 @@ public class UrlController {
         return ResponseEntity.ok().body(HttpStatus.NOT_FOUND);
     }
 
-    // 5 - Updating
-    @PutMapping("/api/editing")
+    // 4.2 - Deleting (Html) - сделать !!!.
+    /*
+    code
+     */
+
+
+
+    // 5.1 - Updating (Rest).
+    @PutMapping(value = "/api/editing", produces = "application/json")
+    @ResponseBody
     public ResponseEntity<?> editUrl(@RequestBody Url url) throws MalformedURLException {
         if (url.getUrl() == null) {
             return ResponseEntity.ok().body("null");
@@ -113,5 +152,11 @@ public class UrlController {
         }
         return ResponseEntity.ok().body(HttpStatus.NOT_FOUND);
     }
+
+    // 5.2 - Updating (Html) - сделать !!!..
+    /*
+    Выпадающим списком можно сделать.
+    code
+     */
 
 }

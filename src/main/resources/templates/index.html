@@ -1,30 +1,100 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" lang="eng">
 <head>
-    <title>List of links</title>
+    <title>Main page</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style>
         table, th, td {
-            width: 50%;
+            width: 90%;
             border: 2px solid blue;
             margin: auto;
             text-align: center;
+        }
+        th, td {
+            width: 45%;
+        }
+        .newLink {
+            width: 500px;
+            height: 70px;
+            color: chartreuse;
+            margin: 20px auto;
+            display: block;
+            background-color: antiquewhite;
+            font-size: large;
+        }
+        /* Split the screen in half */
+        .split {
+            height: 100%;
+            width: 50%;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            overflow-x: hidden;
+            padding-top: 20px;
+            text-align: center;
+        }
+        .left {
+            left: 0;
+        }
+        .right {
+            right: 0;
+        }
+        dialog {
+            background: yellow;
+            width: 350px;
+            height: 350px;
+            border-radius: 5px;
+            z-index: 2;
         }
     </style>
 </head>
 <body>
 
-<h1 style="text-align: center">List of links</h1>
-<table>
-    <tr>
-        <th>Short link</th>
-        <th>Link</th>
-    </tr>
-    <tr th:each="url : ${listOfUrls}">
-        <td><a target="_blank" th:href="${url.url}"><p th:text="${url.shortUrl}"></p></a></td>
-        <td><a target="_blank" th:href="${url.url}"><p th:text="${url.url}"></p></a></td>
-    </tr>
-</table>
+<div class="split left">
+    <form action="/urls" method="post" style="margin: 20px auto; width: 500px;">
+        <h2 style="align-content: center;">Create new Link</h2>
+        <label>
+            Destination:<br>
+            <input required placeholder="https://google.com" name="url" style="height: 40px; font-size: 18px;">
+            <br><span style="color: red" th:text="${isValid}"></span>
+        </label><br><br>
+        <label>
+            Short link (optional):<br>
+            <input placeholder="short_url" name="shortUrl" style="height: 40px; font-size: 18px;">
+        </label>
+        <button class="newLink">Create new Link</button>
+    </form>
+
+    <span>Edit url: </span>
+    <button id="openDialog">Edit</button>
+
+</div>
+
+<div class="split right">
+    <h2 style="text-align: center">List of links</h2>
+    <table>
+        <tr>
+            <th>Short link</th>
+            <th>Link</th>
+        </tr>
+        <tr th:each="url : ${listOfUrls}">
+            <td><a target="_blank" th:href="${url.url}"><p th:text="${url.shortUrl}"></p></a></td>
+            <td><a target="_blank" th:href="${url.url}"><p th:text="${url.url}"></p></a></td>
+        </tr>
+    </table>
+</div>
+<dialog>
+    <button id="closeDialog"></button>
+</dialog>
+<script>
+    const dialog = document.querySelector('dialog');
+    document.querySelector('#openDialog').onclick = function() {
+        dialog.show();
+    }
+    document.querySelector('#closeDialog').onclick = function() {
+        dialog.close();
+    }
+</script>
 
 </body>
 </html>
