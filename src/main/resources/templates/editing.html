@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="eng">
 <head>
-    <title>Main page</title>
+    <title>Updating</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style>
         table, th, td {
@@ -13,7 +13,16 @@
         th, td {
             width: 45%;
         }
-        .newLink, .editLink, .deleteLink {
+        .editLink {
+            width: 500px;
+            height: 55px;
+            color: white;
+            margin: 20px auto;
+            display: block;
+            background-color: green;
+            font-size: large;
+        }
+        .back {
             width: 500px;
             height: 55px;
             color: white;
@@ -22,7 +31,6 @@
             background-color: gray;
             font-size: large;
         }
-        /* Split the screen in half */
         .split {
             height: 100%;
             width: 50%;
@@ -35,7 +43,6 @@
         }
         .left {
             left: 0;
-            margin-top: 60px;
         }
         .right {
             right: 0;
@@ -44,18 +51,24 @@
 </head>
 <body style="background-color: darkkhaki">
 
-<div class="split left">
+<div class="split left" style="align-content: center; text-align: center; ">
 
-    <form action="/create">
-        <button class="newLink">Create new Link</button>
+    <!--Editing-->
+    <form action="" method="post"
+            style="margin: 60px auto 10px; width: 550px; height: 230px;">
+        <h2 style="align-content: center;">Editing Link</h2>
+        <label>Type short link:
+            <input required placeholder="shor_url_old" name="shortUrl" style="height: 40px; font-size: 18px;">
+        </label>
+        <br><br>
+        <label>Replace on:
+            <input required placeholder="short_url_new" name="url" style="height: 40px; font-size: 18px;">
+        </label>
+        <br><button class="editLink">Edit Link</button>
     </form>
-    <form action="/update">
-        <button class="editLink">Edit Link</button>
+    <form action="/urls">
+        <button class="back">Back on the main page</button>
     </form>
-    <form action="/delete">
-        <button class="deleteLink">Delete Link</button>
-    </form>
-
 </div>
 
 <div class="split right">
