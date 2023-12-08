@@ -55,7 +55,7 @@ public class UrlController {
         return ResponseEntity.ok().body(HttpStatus.NOT_FOUND);
     }
 
-    // 3 - Creating (Rest)
+    // 3 - Creating (Rest).
     @PostMapping(value = "/api/adding", produces = "application/json")
     @ResponseBody
     public ResponseEntity<?> addUrlRest(@RequestBody Url url) throws MalformedURLException {
@@ -80,7 +80,7 @@ public class UrlController {
     // 4 - Deleting by shortUrl (Rest).
     @DeleteMapping(value = "/api/deleting/{shortUrl}", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<?> deleteUrl(@PathVariable String shortUrl) {
+    public ResponseEntity<?> deleteUrlRest(@PathVariable String shortUrl) {
         Url url = urlService.getByShortUrl(shortUrl);
         if (url != null) {
             urlService.delete(url);
@@ -89,18 +89,16 @@ public class UrlController {
         return ResponseEntity.ok().body(HttpStatus.NOT_FOUND);
     }
 
-    // 5 - Updating short url (Rest) - еще переделываю. Соответствующий тест тоже надо переделать!.
-    @PutMapping(value = "/api/editing", produces = "application/json")
+    // 5 - Updating short url (Rest).
+    @PutMapping(value = "/api/editing/{shortUrl}", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<?> editUrlRest(@RequestBody Url url) throws MalformedURLException {
-        if (url.getUrl() == null) {
-            return ResponseEntity.ok().body("null");
-        }
-        Url url2 = urlService.getByShortUrl(url.getShortUrl());
-        if (url2 != null) {
-            url2.setShortUrl(url.getShortUrl());
-            urlService.editUrl(url2);
-            return ResponseEntity.ok().body(HttpStatus.OK);
+    public ResponseEntity<?> testEditUrlRest(@PathVariable String shortUrl) throws MalformedURLException {
+        Url url = urlService.getByShortUrl(shortUrl);
+        if (url != null) {
+            String shortUrlNew = faker.regexify("[0-9]{10}");
+            url.setShortUrl(shortUrlNew);
+            urlService.editUrl(url);
+            return ResponseEntity.ok(shortUrlNew);
         }
         return ResponseEntity.ok().body(HttpStatus.NOT_FOUND);
     }
@@ -142,7 +140,7 @@ public class UrlController {
     }
 
     // Post - methods (HTML).
-    // Creating (HTML) - done. Вроде работает.
+    // Creating (HTML).
     @PostMapping("/create")
     public ModelAndView addUrlHtml(@RequestParam("url") String fullUrl,
                                    @RequestParam("shortUrl") String shortUrl)
@@ -170,7 +168,7 @@ public class UrlController {
         return mav;
     }
 
-    // Deleting (Html) - кажется работает.
+    // Deleting (Html).
     @PostMapping("/delete")
     public ModelAndView deleteUrlHtml(@RequestParam("shortUrl") String shortUrl) {
         ModelAndView mav = new ModelAndView("deleting");
@@ -183,13 +181,12 @@ public class UrlController {
         return mav;
     }
 
-    // Updating (Html) - коряво, но работает.
+    // Updating (Html)
     @PostMapping("/update")
-    public ModelAndView editUrlHtml(@RequestParam("shortUrl") String shortUrlOld,
-                                    @RequestParam("url") String shortUrlNew) {
+    public ModelAndView editUrlHtml(@RequestParam("shortUrl") String shortUrlOld) {
 
         ModelAndView mav = new ModelAndView("editing");
-
+        String shortUrlNew = faker.regexify("[0-9]{10}");
         Url url = urlService.getByShortUrl(shortUrlOld);
         if (url != null) {
             url.setShortUrl(shortUrlNew);
