@@ -1,17 +1,10 @@
 # SpringBootTask
 
-Link on the test task: https://github.com/avito-tech/auto-backend-trainee-assignment
-
-Various technical assignments: https://qna.habr.com/q/762121
+Link on the assignment: https://github.com/avito-tech/auto-backend-trainee-assignment
 
 ### Running project
 
 Run project with 'docker-compose up' command
-
-
-
-
-
 
 ### Results of load testing
 
@@ -30,3 +23,10 @@ We have quite high performance of server:
 - "Deviation": 3:
 
 ![img_3.png](img_3.png)
+
+### Bonus
+
+Our JSON API service has simple UI.
+
+----------------------
+Various technical assignments: https://qna.habr.com/q/762121
