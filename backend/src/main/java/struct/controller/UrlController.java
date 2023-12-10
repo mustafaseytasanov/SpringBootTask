@@ -107,7 +107,7 @@ public class UrlController {
     Html methods
      */
     // Get - methods (HTML).
-    @GetMapping("/urls")
+    @GetMapping("")
     public ModelAndView getUrlsHtml() {
         List<Url> listOfUrls = urlService.getAll();
         ModelAndView mav = new ModelAndView("index");

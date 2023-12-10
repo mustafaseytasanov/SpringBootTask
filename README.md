@@ -4,6 +4,15 @@ Link on the test task: https://github.com/avito-tech/auto-backend-trainee-assign
 
 Various technical assignments: https://qna.habr.com/q/762121
 
+### Running project
+
+Run project with 'docker-compose up' command
+
+
+
+
+
+
 ### Results of load testing
 
 We select Apache JMeter tool.

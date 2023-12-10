@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="eng">
 <head>
-    <title>Deleting</title>
+    <title>Creating</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style>
         table, th, td {
@@ -13,13 +13,13 @@
         th, td {
             width: 45%;
         }
-        .deleteLink {
+        .newLink {
             width: 500px;
             height: 55px;
             color: white;
             margin: 20px auto;
             display: block;
-            background-color: red;
+            background-color: green;
             font-size: large;
         }
         .back {
@@ -54,15 +54,20 @@
 <div class="split left">
 
     <form action="" method="post" style="margin: 60px auto 10px; width: 550px;
-                height: 175px;">
-        <h2 style="align-content: center;">Delete Link</h2>
+                height: 320px;">
+        <h2 style="align-content: center;">Create new Link</h2>
         <label>
-            Link name: <input required placeholder="short_url"
-                              name="shortUrl" style="height: 40px; font-size: 18px;">
+            Destination:<br>
+            <input required placeholder="https://google.com" name="url" style="height: 40px; font-size: 18px;">
+            <br><span style="color: red" th:text="${isValid}"></span>
+        </label><br><br>
+        <label>
+            Short link (optional):<br>
+            <input placeholder="short_url" name="shortUrl" style="height: 40px; font-size: 18px;">
         </label>
-        <button class="deleteLink">Delete</button>
+        <button class="newLink">Create new Link</button>
     </form>
-    <form action="/urls">
+    <form action="../">
         <button class="back">Back on the main page</button>
     </form>
 </div>

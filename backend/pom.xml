@@ -14,7 +14,7 @@
 	<name>SpringBootTask</name>
 	<description>SpringBootTask</description>
 
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<properties>
 		<java.version>17</java.version>

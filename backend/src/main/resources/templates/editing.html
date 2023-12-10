@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="eng">
 <head>
-    <title>Creating</title>
+    <title>Updating</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style>
         table, th, td {
@@ -13,7 +13,7 @@
         th, td {
             width: 45%;
         }
-        .newLink {
+        .editLink {
             width: 500px;
             height: 55px;
             color: white;
@@ -51,23 +51,18 @@
 </head>
 <body style="background-color: darkkhaki">
 
-<div class="split left">
+<div class="split left" style="align-content: center; text-align: center; ">
 
-    <form action="" method="post" style="margin: 60px auto 10px; width: 550px;
-                height: 320px;">
-        <h2 style="align-content: center;">Create new Link</h2>
-        <label>
-            Destination:<br>
-            <input required placeholder="https://google.com" name="url" style="height: 40px; font-size: 18px;">
-            <br><span style="color: red" th:text="${isValid}"></span>
-        </label><br><br>
-        <label>
-            Short link (optional):<br>
-            <input placeholder="short_url" name="shortUrl" style="height: 40px; font-size: 18px;">
+    <form action="" method="post"
+            style="margin: 60px auto 10px; width: 550px; height: 230px;">
+        <h2 style="align-content: center;">Editing Link</h2>
+        <label>Type short link:
+            <input required placeholder="short_url" name="shortUrl" style="height: 40px; font-size: 18px;">
         </label>
-        <button class="newLink">Create new Link</button>
+        <br><br>
+        <br><button class="editLink">Edit Link</button>
     </form>
-    <form action="/urls">
+    <form action="../">
         <button class="back">Back on the main page</button>
     </form>
 </div>
